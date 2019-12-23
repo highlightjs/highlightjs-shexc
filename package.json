@@ -1,10 +1,14 @@
 {
   "name": "highlightjs-shexc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Shape Expressions Compact Syntax (ShExC) syntax highlighting plugin for highlight.js",
-  "main": "shexc.js",
+  "main": "src/shexc.js",
+  "files": [
+    "dist/shexc.min.js"
+  ],
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "minify": "cat  src/shexc.js | minify --js > dist/shexc.min.js",
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
   "homepage": "https://github.com/highlightjs/highlightjs-shexc#readme",
   "devDependencies": {
     "highlightjs": "^9.10.0",
+    "minify": "^5.0.0",
     "mocha": "^5.2.0",
     "should": "^13.2.3"
   }
