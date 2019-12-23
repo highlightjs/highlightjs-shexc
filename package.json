@@ -3,17 +3,14 @@
   "version": "1.0.0",
   "description": "Shape Expressions Compact Syntax (ShExC) syntax highlighting plugin for highlight.js",
   "main": "shexc.js",
-  "scripts": 
-  {
+  "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec"
   },
-  "repository": 
-  {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/highlightjs/highlightjs-shexc.git"
   },
-  "keywords": 
-  [
+  "keywords": [
     "shex",
     "neo4j",
     "hljs",
@@ -22,13 +19,11 @@
   ],
   "author": "Eric Prud'hommeaux",
   "license": "MIT",
-  "bugs": 
-  {
+  "bugs": {
     "url": "https://github.com/highlightjs/highlightjs-shexc/issues"
   },
   "homepage": "https://github.com/highlightjs/highlightjs-shexc#readme",
-  "devDependencies": 
-  {
+  "devDependencies": {
     "highlightjs": "^9.10.0",
     "mocha": "^5.2.0",
     "should": "^13.2.3"
