@@ -1,6 +1,6 @@
 {
   "name": "highlightjs-shexc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shape Expressions Compact Syntax (ShExC) syntax highlighting plugin for highlight.js",
   "main": "src/shexc.js",
   "files": [

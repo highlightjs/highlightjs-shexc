@@ -3,7 +3,7 @@ var promisify = require("util").promisify;
 let path = require('path');
 let hljs = require("highlightjs");
 const fs = require("fs");
-let hljsDefineShExC = require("../shexc");
+let hljsDefineShExC = require("../src/shexc");
 
 const readdir = promisify(fs.readdir),
       readFile = promisify(fs.readFile);
@@ -32,7 +32,7 @@ describe("ShExC Tests", () => {
         markup(f);
     }
     it("should be detected correctly", async () => {
-        var code = await readFile(path.join(__dirname, "detect.txt"), "utf-8");
+        var code = await readFile(path.join(__dirname, "detect", "sample.txt"), "utf-8");
         var actual = hljs.highlightAuto(code).language;
         actual.should.eql("shexc");
     });
