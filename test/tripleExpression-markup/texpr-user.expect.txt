@@ -1,0 +1,3 @@
+<span class="hljs-type">:</span><span class="hljs-variable">name</span> <span class="hljs-type">xsd:</span><span class="hljs-variable">string</span> ;
+<span class="hljs-type">:</span><span class="hljs-variable">mbox</span> IRI ;
+<span class="hljs-type">:</span><span class="hljs-variable">contact</span> <span class="hljs-name">@&lt;EmployeeShape&gt;</span>

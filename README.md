@@ -2,6 +2,8 @@
 
 ## Shape Expressions Compact Syntax (ShExC) language syntax highlighting plugin for [highlight.js](https://highlightjs.org/)
 
+[Demo](https://highlightjs.github.io/highlightjs-shexc/)
+
 ShEx is a schema language for [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework). It defines and validates the structural requires for RDF graphs.
 
 For more about ShEx here:
