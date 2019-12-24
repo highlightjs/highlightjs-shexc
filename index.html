@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>highlightjs-shexc user</title>
+    <link rel="stylesheet" href="https://unpkg.com/highlightjs-shexc@0/style/shexc.css"/>
+    <!-- <link rel="stylesheet" href="style/shexc.css"/> -->
+  </head>
+  <body>
+    <h1>highlightjs-shexc user</h1>
+    <p>
+      This is an example highlightjs ShExC document.
+    </p>
+    <h2>Some ShapeExpressions</h2>
+    <pre><code class="language-shexc">
+PREFIX : &lt;http://my.example/schema&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+IMPORT &lt;../foo.shex&gt;
+BASE &lt;http://my.example/schema&gt;
+
+&lt;IssueShape&gt; {
+  :reproducedBy @&lt;EmployeeShape&gt;?
+}
+
+ABSTRACT &lt;PersonShape&gt; {
+  :name xsd:string ;
+  :mbox IRI
+}
+
+&lt;UserShape&gt; EXTENDS @&lt;PersonShape&gt; {
+  :representative @&lt;EmployeeShape&gt;
+}
+
+ABSTRACT &lt;RepShape&gt; {
+  :phone IRI /^tel:\+?[1-9][0-9]{1,14}$/+ # E.164 number
+}
+
+&lt;EmployeeShape&gt;
+  EXTENDS @&lt;PersonShape&gt; EXTENDS @&lt;RepShape&gt; {
+}
+    </code></pre>
+    <h2>Some TripleExpressions</h2>
+    <pre><code class="language-texpr">
+:name xsd:string ;
+:mbox IRI ;
+:context @&lt;EmployeeShape&gt;
+    </code></pre>
+    <script src="https://unpkg.com/highlightjs@9/highlight.pack.js"></script>
+    <script src="https://unpkg.com/highlightjs-shexc@0/dist/shexc.min.js"></script>
+    <!-- <script src="../../build/highlight.js"></script> -->
+    <!-- <script src="dist/shexc.min.js"></script> -->
+    <script>
+    hljs.registerLanguage('texpr', h =>
+                          h.requireLanguage("shexc")
+                          .rawDefinition({startingProduction: "tripleExpression"}));
+    hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

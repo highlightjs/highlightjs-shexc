@@ -10,7 +10,7 @@ const readdir = promisify(fs.readdir),
 
 describe("ShExC Tests", () => {
     beforeEach(() => {
-        hljsDefineShExC(hljs);
+        hljs.registerLanguage("shexc", hljsDefineShExC)
     });
   /* sticks all markup tests into a single it()
     it("should generate correct markup", async () => {

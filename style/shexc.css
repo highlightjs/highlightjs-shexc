@@ -1,0 +1,13 @@
+.hljs-title    { color:#777700; font-weight: bold  ; }
+.hljs-name     { color:#777700; font-weight: normal; }
+.hljs-keyword  { color:#770077; font-weight: normal; }
+.hljs-symbol   { color:#bc6060; font-weight: normal; }
+.hljs-type     { color:#880000; font-weight: normal; }
+.hljs-variable { color:#bc6060; font-weight: normal; }
+code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #F0F0F0;
+    color: #444;
+}

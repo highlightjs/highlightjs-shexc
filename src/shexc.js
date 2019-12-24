@@ -36,9 +36,7 @@ Category: misc
  * will have the same class applied to both.
  */
 
-var module = module ? module : {};     // shim for browser use
-
-function hljsDefineShExC (hljs) {
+module.exports = function (hljs, opts = {}) {
   /** terminals from <http://shex.io/shex-semantics/index.html#term-IRIREF>
    * <IRIREF>      ::=          "<" ([^#0000- <>\"{}|^`\\] | UCHAR)* ">"
    * <PNAME_NS>	   ::=   	PN_PREFIX? ":"
@@ -70,12 +68,13 @@ function hljsDefineShExC (hljs) {
   const PERCENT = { className: 'meta-keyword', begin: PERCENT_RE }
   const UCHAR = { className: 'meta-keyword', begin: UCHAR_RE }
   const PN_LOCAL_ESC = { className: 'meta-keyword', begin: PN_LOCAL_ESC_RE }
-  const IRIREF = {
+  const productions = {}
+  productions.IRIREF = {
     className: 'symbol',
     begin: /</, end: />/, // can't use begin: IRIREF_RE because of contains.
     contains: [ PERCENT, UCHAR ]
   }
-  const prefixedName = {
+  productions.prefixedName = {
     begin: prefixedName_RE,
     returnBegin: true,
     contains: [
@@ -100,7 +99,7 @@ function hljsDefineShExC (hljs) {
    * prefixDecl    ::=          "PREFIX" PNAME_NS IRIREF
    * importDecl    ::=          "IMPORT" IRIREF
    */
-  const prefix = {
+  productions.prefix = {
     beginKeywords: "prefix",
     // begin: "prefix",
     end: EndOfDocument,
@@ -114,29 +113,29 @@ function hljsDefineShExC (hljs) {
         className: "type",
         begin: PNAME_NS_RE,
       },
-      Object.assign({ endsParent: true }, IRIREF),
+      Object.assign({ endsParent: true }, productions.IRIREF),
     ]
   }
-  const base = {
+  productions.base = {
     beginKeywords: "base",
     end: EndOfDocument,
     returnBegin: true,
     contains: [
-      Object.assign({ endsParent: true }, IRIREF),
+      Object.assign({ endsParent: true }, productions.IRIREF),
     ]
   }
-  const _import = { // Need a leading '_' because "import" is a js keyword.
+  productions._import = { // Need a leading '_' because "import" is a js keyword.
     beginKeywords: "import",
     end: EndOfDocument,
     returnBegin: true,
     contains: [
-      Object.assign({ endsParent: true }, IRIREF),
+      Object.assign({ endsParent: true }, productions.IRIREF),
     ]
   }
 
   /** shape expressions from <http://shex.io/shex-semantics/index.html#prod-shapeExpression> 
    */
-  const shape = {
+  productions.shape = {
     begin: /{/, end: /}/,
     relevance: 0
     // Add .contains (below) after constructing its contents.
@@ -172,7 +171,7 @@ function hljsDefineShExC (hljs) {
     {
       beginKeywords: 'extra closed', end: /{/,
       returnEnd: true,
-      contains: [IRIREF, prefixedName],
+      contains: [productions.IRIREF, productions.prefixedName],
       relevance: 10
     },
 
@@ -190,10 +189,12 @@ function hljsDefineShExC (hljs) {
       ],
     },
 
-    shape,
+    productions.shape,
   ]
-  const shapeExpression_keywords = 'and or not closed extends restricts'
-  const shapeExpression = {
+  const shapeExpression_keywords = 'and or not closed abstract extends restricts iri bnode literal nonliteran'
+    + ' length minlength maxlength'
+    + ' mininclusive minexclusive maxinclusive maxexclusive'
+  productions.shapeExpression = {
     begin: iris_RE,
     end: EndOfDocument,
     returnBegin: true,
@@ -204,49 +205,48 @@ function hljsDefineShExC (hljs) {
 
   /** shape expressions from <http://shex.io/shex-semantics/index.html#prod-unaryTripleExpr> 
    */
-  const tripleConstraint = {
+  productions.tripleExpression = {
     begin: iris_RE,
     end: EndOfDocument,
     returnBegin: true,
     endsWithParent: true,
     keywords: shapeExpression_keywords,
-    contains: [IRIREF, prefixedName].concat(shapeExprContentModel),
+    contains: [productions.IRIREF, productions.prefixedName].concat(shapeExprContentModel),
     relevance: 0
   }
-  const tripleExprLabel = {
+  productions.tripleExprLabel = {
     className: 'name',
     begin: '$' + iris_RE,
     contains: [ PERCENT, UCHAR ],
     relevance: 10
   }
-  const inclusion = {
+  productions.inclusion = {
     className: 'name',
     begin: '&' + iris_RE,
     contains: [ PERCENT, UCHAR ],
     relevance: 10
   }
-
-  // Add last component in this cycle:
-  //   shape ➜ tripleConstraint ➜ shapeExpression ➜ shape
-  shape.contains = [tripleExprLabel, inclusion, tripleConstraint];
-
-  // Return the root language <http://shex.io/shex-semantics/index.html#prod-shexDoc>
-  return {
+  // The root language is called "shexDoc" <http://shex.io/shex-semantics/index.html#prod-shexDoc>
+  productions.shexDoc = {
     case_insensitive: true,
     contains: [
       hljs.HASH_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      prefix,
-      base,
-      _import,
-      shapeExpression,
+      productions.prefix,
+      productions.base,
+      productions._import,
+      productions.shapeExpression,
     ],
     relevance: 10
-  };
+  }
+
+  // Add last component in this cycle:
+  //   shape ➜ tripleExpression ➜ shapeExpression ➜ shape
+  productions.shape.contains = [productions.tripleExprLabel, productions.inclusion, productions.tripleExpression]
+
+  const startingProduction = opts.startingProduction || 'shexDoc'
+  if (!(startingProduction in productions))
+    throw Error(`starting production ${startingProduction} not found in ${Object.keys(productions).join(', ')}}`)
+  return productions[startingProduction]
 }
 
-module.exports = function(hljs) {
-    hljs.registerLanguage('shexc', hljsDefineShExC);
-};
-
-module.exports.definer = hljsDefineShExC;

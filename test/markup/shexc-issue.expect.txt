@@ -1,0 +1,25 @@
+<span class="hljs-keyword">PREFIX</span> <span class="hljs-type">:</span> <span class="hljs-symbol">&lt;http://my.example/schema&gt;</span>
+<span class="hljs-keyword">PREFIX</span> <span class="hljs-type">xsd:</span> <span class="hljs-symbol">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
+<span class="hljs-keyword">IMPORT</span> <span class="hljs-symbol">&lt;../foo.shex&gt;</span>
+<span class="hljs-keyword">BASE</span> <span class="hljs-symbol">&lt;http://my.example/schema&gt;</span>
+
+<span class="hljs-title">&lt;IssueShape&gt;</span> {
+  <span class="hljs-type">:</span><span class="hljs-variable">reproducedBy</span> <span class="hljs-name">@&lt;EmployeeShape&gt;</span>?
+}
+
+<span class="hljs-keyword">ABSTRACT</span> <span class="hljs-title">&lt;PersonShape&gt;</span> {
+  <span class="hljs-type">:</span><span class="hljs-variable">name</span> <span class="hljs-type">xsd:</span><span class="hljs-variable">string</span> ;
+  <span class="hljs-type">:</span><span class="hljs-variable">mbox</span> <span class="hljs-keyword">IRI</span>
+}
+
+<span class="hljs-title">&lt;UserShape&gt;</span> <span class="hljs-keyword">EXTENDS</span> <span class="hljs-name">@&lt;PersonShape&gt;</span> {
+  <span class="hljs-type">:</span><span class="hljs-variable">representative</span> <span class="hljs-name">@&lt;EmployeeShape&gt;</span>
+}
+
+<span class="hljs-keyword">ABSTRACT</span> <span class="hljs-title">&lt;RepShape&gt;</span> {
+  <span class="hljs-type">:</span><span class="hljs-variable">phone</span> <span class="hljs-keyword">IRI</span> <span class="hljs-regexp">/^tel:\+?[1-9][0-9]{1,14}$/</span>+ <span class="hljs-comment"># E.164 number</span>
+}
+
+<span class="hljs-title">&lt;EmployeeShape&gt;</span>
+  <span class="hljs-keyword">EXTENDS</span> <span class="hljs-name">@&lt;PersonShape&gt;</span> <span class="hljs-keyword">EXTENDS</span> <span class="hljs-name">@&lt;RepShape&gt;</span> {
+}
