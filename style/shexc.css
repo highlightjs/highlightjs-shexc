@@ -4,6 +4,7 @@
 .hljs-symbol   { color:#bc6060; font-weight: normal; }
 .hljs-type     { color:#880000; font-weight: normal; }
 .hljs-variable { color:#bc6060; font-weight: normal; }
+.hljs-comment  { color:#0000cc; font-weight: normal;   }
 code.hljs {
     display: block;
     overflow-x: auto;
