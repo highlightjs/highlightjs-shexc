@@ -9,21 +9,31 @@
 <html>
   <head>
     <title>highlightjs-shexc user</title>
-    <link rel="stylesheet" href="https://unpkg.com/highlightjs-shexc@0/style/shexc.css"/>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/highlightjs-shexc@0/style/shexc.css"/> -->
     <!-- <link rel="stylesheet" href="style/shexc.css"/> -->
+    <link rel="stylesheet" href="../../build/cdn/styles/default.min.css"/>
+    <style>
+      #demos { display:flex; flex-wrap: wrap; }
+      #demos > div { padding-left: 1em; }
+    </style>
   </head>
   <body>
     <h1>highlightjs-shexc user</h1>
     <p>
-      This is an example highlightjs ShExC document.
+      This is an example highlightjs-rdf document.
+      It contains examples of Turtle, SPARQL, Trig, and multiple entry points to ShEx.
     </p>
-    <h2>Some ShapeExpressions</h2>
-    <pre><code class="language-shexc">
+    <div id="demos">
+    <div>
+    <h2>ShEx</h2>
+    <pre><code class="shex">
 PREFIX : &lt;http://my.example/schema&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 IMPORT &lt;../foo.shex&gt;
 BASE &lt;http://my.example/schema&gt;
 
+/* asdf
+ */
 &lt;IssueShape&gt; {
   :reproducedBy @&lt;EmployeeShape&gt;?
 }
@@ -45,17 +55,53 @@ ABSTRACT &lt;RepShape&gt; {
   EXTENDS @&lt;PersonShape&gt; EXTENDS @&lt;RepShape&gt; {
 }
     </code></pre>
-    <h2>Some TripleExpressions</h2>
+    </div>
+    <div>
+    <h2>Trig</h2>
+    <pre><code class="trig">
+&lt;IssueGraph1&gt; {
+  &lt;Issue1&gt; :reproducedBy &lt;Employee2&gt;
+}
+
+    </code></pre>
+    </div>
+    <div>
+    <h2>ShEx tripleExpressions</h2>
     <pre><code class="language-texpr">
 :name xsd:string ;
 :mbox IRI ;
 :contact @&lt;EmployeeShape&gt;
     </code></pre>
-    <script src="https://www.w3.org/2019/12/highlight.js"></script>
+    </div>
+    <div>
+    <h2>Some SPARQL</h2>
+    <pre><code class="sparql">
+PREFIX : &lt;http://my.example/schema&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+BASE &lt;http://my.example/schema&gt;
+
+SELECT (COUNT(?x) AS ?c) WHERE {
+  ?s &lt;p1&gt; ?o .
+  ?o a foo:Bar .
+} LIMIT 20
+    </code></pre>
+    </div>
+    <div>
+    <h2>Turtle</h2>
+    <pre><code class="ttl">
+&lt;Issue1&gt; rdfs:label "b0rked"@en-geek;
+    </code></pre>
+    </div>
+    </div>
+    <!-- <script src="https://www.w3.org/2019/12/highlight.js"></script> -->
     <!-- <script src="https://raw.githubusercontent.com/yyyc514/highlight.js/squash_build_pipeline/src/highlight.js"></script> -->
-    <!-- <script src="../../src/highlight.js"></script> -->
-    <script src="https://unpkg.com/highlightjs-shexc@0/dist/shexc.min.js"></script>
-    <!-- <script src="dist/shexc.min.js"></script> -->
+    <script src="../../src/highlight.js"></script>
+    <!-- <script src="https://unpkg.com/highlightjs-shexc@0/dist/shexc.min.js"></script> -->
+    <script src="dist/shexc.min.js"></script>
+    <!-- <script src="dist/wrapper.js"></script> -->
+    <!-- <script src="https://unpkg.com/highlightjs-shexc@0/dist/sparql.min.js"></script> -->
+    <script src="dist/ttl.min.js"></script>
+    <script src="dist/sparql.min.js"></script>
     <script>
     hljs.registerLanguage('texpr', h =>
                           h.requireLanguage("shexc")
