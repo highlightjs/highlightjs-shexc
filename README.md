@@ -42,4 +42,4 @@ hljs.initHighlightingOnLoad();
 
 ## Licence
 
-© 2019 <a href="http://creativecommons.org/publicdomain/zero/1.0/"><img align="top" src="https://img.shields.io/badge/License-CC0%201.0-660000.svg" alt="CC0 1.0" ></a> highlight.js
+© 2019 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) Eric Prud'hommeaux
