@@ -1,6 +1,6 @@
 /*
 Language: ShExC
-Description: Shape Expressions Compact Syntax, a schema language for graphs, may be good for Turtle
+Description: Shape Expressions Compact Syntax, a schema language for graphs, may be good for Trig
 Author: Eric Prud'hommeaux <eric+github@w3.org>
 Category: misc
 */
@@ -146,6 +146,7 @@ module.exports = function (hljs, opts = {}) {
   // The root language is called "shexDoc" <http://shex.io/shex-semantics/index.html#prod-shexDoc>
   productions.shexDoc = {
     aliases: ['shex'],
+    aliases: ['trig'],
     case_insensitive: true,
     contains: [
       hljs.HASH_COMMENT_MODE,

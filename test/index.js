@@ -3,23 +3,34 @@ var promisify = require("util").promisify;
 let path = require('path');
 let hljs = require("../../../src/highlight");
 const fs = require("fs");
-let hljsDefineShExC = require("../src/languages/shexc");
+let hlShExC = require("../src/languages/shexc");
+let hlTtl = require("../src/languages/ttl");
+let hlSparql = require("../src/languages/sparql");
+let hlLiveScript = require("../../../src/languages/livescript.js");
 
 const readdir = promisify(fs.readdir),
       readFile = promisify(fs.readFile);
 
 describe("ShExC default highlighter", () => {
     before(() =>
-        hljs.registerLanguage("shexc", hljsDefineShExC)
+        hljs.registerLanguage("shexc", hlShExC)
     );
     for (const f of fs.readdirSync(path.join(__dirname, "markup/shexc"))
                .filter(f => !f.includes(".expect.")))
         markup("shexc", "markup/shexc", f);
 
+    (['shexc', 'ttl', 'sparql']).forEach(lang =>
     it("should be detected correctly", async () => {
-        var code = await readFile(path.join(__dirname, "detect", "sample.txt"), "utf-8");
+        var code = await readFile(path.join(__dirname, "detect", lang, "default.txt"), "utf-8");
         var actual = hljs.highlightAuto(code).language;
-        actual.should.eql("shexc");
+        actual.should.eql(lang);
+    })
+                                           );
+
+    it("should be detected correctly", async () => {
+      var code = await readFile(path.join(__dirname, "../../../test/detect/livescript/default.txt"), "utf-8");
+        var actual = hljs.highlightAuto(code).language;
+        actual.should.eql("livescript");
     });
 });
 
@@ -27,7 +38,7 @@ describe("ShExC default highlighter", () => {
     describe("ShExC "+sublang+" highlighter", () => {
         before(() =>
                hljs.registerLanguage(sublang.toLowerCase(), h =>
-                                     hljsDefineShExC(hljs, {startingProduction: sublang}))
+                                     hlShExC(hljs, {startingProduction: sublang}))
         );
         const dir = sublang === "shexDoc" ? "markup/shexc" : sublang + "-markup"
         for (const f of fs.readdirSync(path.join(__dirname, dir))
@@ -35,13 +46,13 @@ describe("ShExC default highlighter", () => {
             markup(sublang, dir, f);
     })
 )
-debugger
+
 function markup (sublang, dir, f) {
     let expectF = f.replace(".txt", ".expect.txt");
     it("should parse test/"+dir+"/" + f + " and generate test/"+dir+"/" + expectF, async () => {
         let fn = path.join(__dirname, dir, f);
         var code = await readFile(path.join(__dirname, dir, f), "utf-8");
-      var exp = await readFile(path.join(__dirname, dir, expectF), "utf-8");debugger;
+      var exp = await readFile(path.join(__dirname, dir, expectF), "utf-8");
         var actual = hljs.highlight(sublang, code).value;
         actual.trim().should.eql(exp.trim(), f);
     });
