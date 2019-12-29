@@ -13,8 +13,12 @@
     <!-- <link rel="stylesheet" href="style/shexc.css"/> -->
     <link rel="stylesheet" href="../../build/cdn/styles/default.min.css"/>
     <style>
-      #demos { display:flex; flex-wrap: wrap; }
-      #demos > div { padding-left: 1em; }
+      #demos { display: flex; flex-flow: row wrap; }
+      #demos > div { margin: .2em; border: thick solid #eee; display: flex; flex-flow: row wrap; align-items: top; }
+
+#demos > div > pre  { flex: 1 100%; }
+#demos > div > h2 { flex: 1; }
+#demos > div > ul    { flex: 2; display999: none; }
     </style>
   </head>
   <body>
@@ -26,7 +30,8 @@
     <div id="demos">
     <div>
     <h2>ShEx</h2>
-    <pre><code class="shex">
+    <ul></ul>
+    <pre><code>
 PREFIX : &lt;http://my.example/schema&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 IMPORT &lt;../foo.shex&gt;
@@ -58,6 +63,7 @@ ABSTRACT &lt;RepShape&gt; {
     </div>
     <div>
     <h2>Trig</h2>
+    <ul></ul>
     <pre><code class="trig">
 &lt;IssueGraph1&gt; {
   &lt;Issue1&gt; :reproducedBy &lt;Employee2&gt;
@@ -66,7 +72,8 @@ ABSTRACT &lt;RepShape&gt; {
     </code></pre>
     </div>
     <div>
-    <h2>ShEx tripleExpressions</h2>
+    <h2>ShEx<br/>tripleExpressions</h2>
+    <ul></ul>
     <pre><code class="language-texpr">
 :name xsd:string ;
 :mbox IRI ;
@@ -75,21 +82,74 @@ ABSTRACT &lt;RepShape&gt; {
     </div>
     <div>
     <h2>Some SPARQL</h2>
+    <ul></ul>
     <pre><code class="sparql">
-PREFIX : &lt;http://my.example/schema&gt;
-PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
-BASE &lt;http://my.example/schema&gt;
+#TEST of SPARQL syntax highlighting comment
 
-SELECT (COUNT(?x) AS ?c) WHERE {
-  ?s &lt;p1&gt; ?o .
-  ?o a foo:Bar .
-} LIMIT 20
+PREFIX data: &lt;http://example.com/foaf/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+prefix:relatedTo :Thing
+prefix:relatedTo [ a :Thing];
+
+SELECT ?mbox ?nick ?ppd
+FROM NAMED &lt;http://example.org/foaf/aliceFoaf&gt;
+FROM NAMED &lt;http://example.org/foaf/bobFoaf&gt;
+WHERE
+{
+  GRAPH data:aliceFoaf
+  {
+    ?alice  foaf:mbox &lt;mailto:alice@work.example&gt;;
+            foaf:knows ?whom .
+    ?whom   foaf:mbox ?mbox ;
+            rdfs:seeAlso ?ppd .
+    ?ppd    a foaf:PersonaProfileDocument .
+  } .
+  GRAPH ?ppd
+  {
+    ?w  foaf:mbox ?mbox ;
+        foaf:nick ?nick
+  }
+}
+
+SELECT ?test
+FROM NAMED &lt;http://something.com/rdf/thing&gt;;
+
+'''The librarian said, "Perhaps you would enjoy 'War and Peace'."'''
+'chat'@fr
+1.0e6
+true
+false
+"1.300"^^xsd:decimal
+
+SELECT ?P (COUNT(?O) AS ?C)
+WHERE { ?S ?P ?O }
+GROUP BY ?P
+HAVING (COUNT(?O) &gt; 2 )
     </code></pre>
     </div>
     <div>
     <h2>Turtle</h2>
+    <ul></ul>
     <pre><code class="ttl">
-&lt;Issue1&gt; rdfs:label "b0rked"@en-geek;
+@base &lt;http://example.org/&gt; .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .
+@prefix rel: &lt;http://www.perceive.net/schemas/relationship/&gt; .
+
+&lt;#green-goblin&gt;
+    rel:enemyOf &lt;#spiderman&gt; ;
+    a foaf:Person ;    # in the context of the Marvel universe
+    foaf:name "Green Goblin" .
+
+&lt;#spiderman&gt;
+    rel:enemyOf &lt;#green-goblin&gt; ;
+    a foaf:Person ;
+    foaf:name "Spiderman", "Человек-паук"@ru .
+
+ foaf:mbox  &lt;mailto:alice@example.org&gt;
     </code></pre>
     </div>
     </div>
@@ -103,9 +163,44 @@ SELECT (COUNT(?x) AS ?c) WHERE {
     <script src="dist/ttl.min.js"></script>
     <script src="dist/sparql.min.js"></script>
     <script>
-    hljs.registerLanguage('texpr', h =>
-                          h.requireLanguage("shexc")
-                          .rawDefinition({startingProduction: "tripleExpression"}));
-    hljs.initHighlightingOnLoad();</script>
+      // If you want to start from a nested production, e.g. "tripleExpression",
+      // register it like so:
+      hljs.registerLanguage('texpr', h =>
+                            h.requireLanguage("shexc")
+                            .rawDefinition({startingProduction: "tripleExpression"}));
+      const guessLanguage = true;
+      if (!guessLanguage)  {
+        // Start syntax highlighting.
+        hljs.initHighlightingOnLoad();
+      } else {
+        // Demonstrate the auto-detection:
+        initHighlighting.called = false;
+        (['DOMContentLoaded', 'load']).forEach(
+          evt => window.addEventListener(evt, initHighlighting, false)
+        );
+
+        function initHighlighting() {
+          if (initHighlighting.called)
+            return;
+          initHighlighting.called = true;
+
+          Array.from(document.querySelectorAll('pre code')).forEach(block => {
+            block.className = "";
+            hljs.highlightBlock(block);
+            const ul = block.parentElement.previousElementSibling;
+            console.log(block, block.result, block.second_best, ul);
+            ul.appendChild(addResult(ul, block.result));
+            if (block.second_best)
+              ul.appendChild(addResult(ul, block.second_best));
+          });
+        }
+
+        function addResult (elt, result) {
+          const li = document.createElement('li');
+          li.innerText = result.language + ' ' + result.re;
+          return li;
+        }
+      }
+    </script>
   </body>
 </html>
