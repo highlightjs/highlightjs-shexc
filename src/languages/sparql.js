@@ -6,7 +6,9 @@ Category: common
 */
 
 module.exports = function (hljs) {
-  var ttl = hljs.getLanguage('ttl').exports;
+  const common = require("../common")
+  const productions = common.productions
+
   var KEYWORDS = {
     meta: 'base|10 prefix|10 @base|10 @prefix|10',
     keyword: 'add all as|0 ask bind by|0 clear construct|10 copymove create data default define delete describe distinct drop exists filter from|0 graph|10 group having in|0 insert limit load minus named|1 not offset optional order reduced select|0 service silent to union using values where with|0',
@@ -20,14 +22,12 @@ module.exports = function (hljs) {
     keywords: KEYWORDS,
     aliases: ['rql'],
     contains: [
-      ttl.PNAME,
-      ttl.VARIABLE,
-      ttl.IRI_LITERAL,
-      ttl.TRIPLE_APOS_STRING,
-      ttl.QUOTE_STRING_LITERAL,
-      ttl.APOS_STRING_LITERAL,
-      ttl.NUMBER,
       hljs.HASH_COMMENT_MODE,
+      productions.IRIREF,
+      productions.prefixedName,
+      common.Var,
+      common.String,
+      common.NumericLiteral,
     ]
   };
 }

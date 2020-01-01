@@ -38,11 +38,11 @@ Category: misc
 
 module.exports = function (hljs, opts = {}) {
   const common = require("../common")
-
   const productions = common.productions
 
   productions._import = { // Need a leading '_' because "import" is a js keyword.
     beginKeywords: "import",
+    className: "meta",
     end: common.EndOfDocument,
     returnBegin: true,
     contains: [
@@ -104,6 +104,13 @@ module.exports = function (hljs, opts = {}) {
       contains: [
         hljs.REGEXP_MODE,
       ],
+    },
+
+    {
+      className: 'valueSet',
+      begin: '\\[',
+      end: '\\]',
+      contains: [common.NumericLiteral, common.String, productions.IRIREF, productions.prefixedName]
     },
 
     productions.shape,

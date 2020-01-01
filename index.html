@@ -40,7 +40,11 @@ BASE &lt;http://my.example/schema&gt;
 /* asdf
  */
 &lt;IssueShape&gt; {
-  :reproducedBy @&lt;EmployeeShape&gt;?
+  :reproducedBy @&lt;EmployeeShape&gt;? ;
+  :mode ["a\r\n" 1 :ab &apos;b&apos; 1.1 &lt;cd#ef&gt;~ - &lt;cd#efg&gt;~
+         """c""" .1 &apos;&apos;&apos;d&apos;&apos;&apos; 1E1 "e&apos;" 1.1e1 &apos;f"&apos; .1e1 """
+g
+h"""]
 }
 
 ABSTRACT &lt;PersonShape&gt; {
@@ -116,8 +120,9 @@ WHERE
 SELECT ?test
 FROM NAMED &lt;http://something.com/rdf/thing&gt;;
 
-'''The librarian said, "Perhaps you would enjoy 'War and Peace'."'''
-'chat'@fr
+&apos;&apos;&apos;The librarian said, "Perhaps you would
+enjoy &apos;War and Peace&apos;."&apos;&apos;&apos;
+&apos;chat&apos;@fr
 1.0e6
 true
 false
