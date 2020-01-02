@@ -110,7 +110,7 @@ module.exports = function (hljs, opts = {}) {
       className: 'valueSet',
       begin: '\\[',
       end: '\\]',
-      contains: [common.NumericLiteral, common.String, productions.IRIREF, productions.prefixedName]
+      contains: [common.literal, productions.IRIREF, productions.prefixedName]
     },
 
     productions.shape,
