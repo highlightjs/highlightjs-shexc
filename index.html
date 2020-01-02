@@ -31,7 +31,7 @@
     <div>
     <h2>ShEx</h2>
     <ul></ul>
-    <pre><code>
+    <pre><code class="shexc">
 PREFIX : &lt;http://my.example/schema&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 IMPORT &lt;../foo.shex&gt;
@@ -173,7 +173,7 @@ HAVING (COUNT(?O) &gt; 2 )
       hljs.registerLanguage('texpr', h =>
                             h.requireLanguage("shexc")
                             .rawDefinition({startingProduction: "tripleExpression"}));
-      const guessLanguage = true;
+      const guessLanguage = false;
       if (!guessLanguage)  {
         // Start syntax highlighting.
         hljs.initHighlightingOnLoad();
