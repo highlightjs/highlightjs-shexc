@@ -99,17 +99,14 @@ const literal = {
  * prefixDecl    ::=          "PREFIX" PNAME_NS IRIREF
  * importDecl    ::=          "IMPORT" IRIREF
  */
+const PREFIX_RE = "[Pp][Rr][Ee][Ff][Ii][Xx]"
 const prefix = {
-  beginKeywords: "prefix",
-  className: "meta",
-  // begin: "prefix",
+  begin: PREFIX_RE,
+  className: "rdf_prefix",
   end: EndOfDocument,
   returnBegin: true,
   contains: [
-    // { // not needed if using beginKeywords in parent
-    //   className: "keyword",
-    //   beginKeywords: 'prefix',
-    // },
+    { className: 'meta', begin: PREFIX_RE },
     {
       className: "type",
       begin: PNAME_NS_RE,
@@ -117,12 +114,14 @@ const prefix = {
     Object.assign({ endsParent: true }, IRIREF),
   ]
 }
+const BASE_RE = "[Bb][Aa][Ss][Ee]"
 const base = {
-  beginKeywords: "base",
-  className: "meta",
+  beginKeywords: BASE_RE,
+  className: "rdf_base",
   end: EndOfDocument,
   returnBegin: true,
   contains: [
+    { className: 'meta', begin: BASE_RE },
     Object.assign({ endsParent: true }, IRIREF),
   ]
 }

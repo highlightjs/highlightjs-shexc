@@ -40,12 +40,14 @@ module.exports = function (hljs, opts = {}) {
   const common = require("../common")
   const productions = common.productions
 
+  const IMPORT_RE = "[Ii][Mm][Pp][Oo][Rr][Tt]"
   productions._import = { // Need a leading '_' because "import" is a js keyword.
-    beginKeywords: "import",
-    className: "meta",
+    begin: IMPORT_RE,
+    className: "rdf_import",
     end: common.EndOfDocument,
     returnBegin: true,
     contains: [
+      { className: 'meta', begin: IMPORT_RE },
       Object.assign({ endsParent: true }, productions.IRIREF),
     ]
   }
@@ -57,6 +59,7 @@ module.exports = function (hljs, opts = {}) {
     relevance: 0
     // Add .contains (below) after constructing its contents.
   }
+  const EXTRA_CLOSED_RE = "[Ee][Xx][Tt][Rr][Aa]|[Cc][Ll][Oo][Ss][Ee][Dd]"
   const shapeExprContentModel = [
     hljs.HASH_COMMENT_MODE,
     hljs.C_BLOCK_COMMENT_MODE,
@@ -86,9 +89,11 @@ module.exports = function (hljs, opts = {}) {
      *                                  annotation* semanticActions
      */
     {
-      beginKeywords: 'extra closed', end: /{/,
+      begin: EXTRA_CLOSED_RE, end: /{/,
       returnEnd: true,
-      contains: [productions.IRIREF, productions.prefixedName],
+      contains: [
+        { className: 'meta', begin: EXTRA_CLOSED_RE },
+        productions.IRIREF, productions.prefixedName],
       relevance: 10
     },
 
@@ -115,15 +120,15 @@ module.exports = function (hljs, opts = {}) {
 
     productions.shape,
   ]
-  const shapeExpression_keywords = 'and or not closed abstract extends restricts iri bnode literal nonliteran'
-    + ' length minlength maxlength'
-    + ' mininclusive minexclusive maxinclusive maxexclusive'
+  const shapeExpression_keywords_RE = '[Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt]|[Cc][Ll][Oo][Ss][Ee][Dd]|[Aa][Bb][Ss][Tt][Rr][Aa][Cc][Tt]|[Ee][Xx][Tt][Ee][Nn][Dd][Ss]|[Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt][Ss]|[Ii][Rr][Ii]|[Bb][Nn][Oo][Dd][Ee]|[Ll][Ii][Tt][Ee][Rr][Aa][Ll]|[Nn][Oo][Nn][Ll][Ii][Tt][Ee][Rr][Aa][Ll]'
+    + '|[Ll][Ee][Nn][Gg][Tt][Hh]|[Mm][Ii][Nn][Ll][Ee][Nn][Gg][Tt][Hh]|[Mm][Aa][Xx][Ll][Ee][Nn][Gg][Tt][Hh]'
+    + '|[Mm][Ii][Nn][Ii][Nn][Cc][Ll][Uu][Ss][Ii][Vv][Ee]|[Mm][Ii][Nn][Ee][Xx][Cc][Ll][Uu][Ss][Ii][Vv][Ee]|[Mm][Aa][Xx][Ii][Nn][Cc][Ll][Uu][Ss][Ii][Vv][Ee]|[Mm][Aa][Xx][Ee][Xx][Cc][Ll][Uu][Ss][Ii][Vv][Ee]'
   productions.shapeExpression = {
     begin: common.iris_RE,
     end: common.EndOfDocument,
     returnBegin: true,
-    keywords: shapeExpression_keywords,
-    contains: shapeExprContentModel,
+    // keywords: shapeExpression_keywords,
+    contains: [{ className: 'keyword', begin: shapeExpression_keywords_RE }].concat(shapeExprContentModel),
     relevance: 0
   }
 
@@ -134,7 +139,7 @@ module.exports = function (hljs, opts = {}) {
     end: common.EndOfDocument,
     returnBegin: true,
     endsWithParent: true,
-    keywords: shapeExpression_keywords,
+    keywords: {built_in: 'a|0'}, // shapeExpression_keywords,
     contains: [productions.IRIREF, productions.prefixedName].concat(shapeExprContentModel),
     relevance: 0
   }
@@ -173,6 +178,6 @@ module.exports = function (hljs, opts = {}) {
   const startingProduction = opts.startingProduction || 'shexDoc'
   if (!(startingProduction in productions))
     throw Error(`starting production ${startingProduction} not found in ${Object.keys(productions).join(', ')}}`)
-  return productions[startingProduction]
+  return Object.assign({}, productions[startingProduction], {case_insensitive: false})
 }
 
