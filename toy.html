@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>context-sensitive grammar in highlightjs</title>
+    <link rel="stylesheet" href="../../build/styles/default.min.css"/>
+    <style>
+      .hljs-iri { color: red; }
+      .hljs-pname { color: orange; }
+      .hljs-str { color: blue; }
+      .hljs-punct { background-color: #dfd; }
+      .hljs-predicate { text-decoration: underline; }
+      .hljs-value { text-decoration: overline; }
+    </style>
+  </head>
+  <body>
+    <pre><code class="toy">
+      &lt;i1&gt; 'l1' ; x:y &lt;i3&gt; ; &lt;i4&gt; a:b
+    </code></pre>
+    <script src="../../src/highlight.js"></script>
+    <script src="toy.js">
+    </script>
+  </body>
+</html>
