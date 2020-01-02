@@ -38,8 +38,7 @@ const EndOfDocument = /\B\b/
 const prefixedName_RE = PNAME_LN_RE + '|' + PNAME_NS_RE
 const iris_RE = '(?:' + [prefixedName_RE, IRIREF_RE].join('|') + ')'
 const String_RE = [STRING_LITERAL_LONG1, STRING_LITERAL_LONG2, STRING_LITERAL1, STRING_LITERAL2].join('|')
-const R = new RegExp(String_RE)
-console.log(R, "'chat'@fr".match(R), '"ab"'.match(R))
+const BooleanLiteral_RE = 'true|false'
 const PERCENT = { className: 'meta-keyword', begin: PERCENT_RE }
 const UCHAR = { className: 'meta-keyword', begin: UCHAR_RE }
 const PN_LOCAL_ESC = { className: 'meta-keyword', begin: PN_LOCAL_ESC_RE }
@@ -51,6 +50,7 @@ const IRIREF = {
 }
 const prefixedName = {
   begin: prefixedName_RE,
+  className: 'rdf_prefixedName',
   returnBegin: true,
   contains: [
     {
@@ -78,6 +78,21 @@ const String = {
   begin: String_RE,
   className: 'string',
   relevance: 0
+}
+const BooleanLiteral = {
+  begin: BooleanLiteral_RE,
+  className: 'built-in',
+  relevance: 0
+}
+const literal = {
+  begin: [String_RE, DOUBLE_DECIMAL_INTEGER_RE, BooleanLiteral_RE].join('|'),
+  className: 'rdf_literal',
+  returnBegin: true,
+  contains: [
+    NumericLiteral,
+    String,
+    BooleanLiteral,
+  ],
 }
 /** directives from <https://shexspec.github.io/spec/#prod-directive>
  * baseDecl      ::=          "BASE" IRIREF
@@ -124,6 +139,7 @@ module.exports = {
   String,
   Var,
   NumericLiteral,
+  literal,
   productions: {
     IRIREF,
     prefixedName,
