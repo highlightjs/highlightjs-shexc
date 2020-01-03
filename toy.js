@@ -32,4 +32,22 @@ hljs.registerLanguage("toy", function () {
     }
   }
 }());
-hljs.initHighlightingOnLoad();
+// hljs.initHighlightingOnLoad();
+window.addEventListener('load', evt => {
+  const elt = document.querySelector('pre code.toy')
+  hljs.highlightBlock(elt)
+  let count = 0
+  const cz = Array.from(document.querySelector('pre code.toy').childNodes)
+  for (let i = 0; i < cz.length; ++i) {
+    let c = cz[i]
+    if (c.classList && c.classList[0] === "hljs-tripleConstraint")
+      ++count
+    else if (c.childNodes.length === 1 && c.childNodes[0].nodeType === Node.TEXT_NODE)
+      c.childNodes[0].textContent = c.childNodes[0].textContent.replace(/\n/g, _ => {
+        const was = count
+        count = 0
+        c.classList = "info";
+        return " -- " + was + "\n"
+      })
+  }
+})
