@@ -3,22 +3,27 @@ hljs.registerLanguage("toy", function () {
     const iri = { className: "iri", begin: /<[^>]*>/, endsParent: true }
     const pname = { className: "pname", begin: /[a-z]*:[a-z]*/, endsParent: true }
     const string = { className: "str", begin: /'[^']*'/, endsParent: true }
+    const space = { className: "space", begin: /\s+/ }
+    const error = { className: "error", begin: /./ }
     return {
       contains: [
         {
           className: "predicate",
           begin: /<|[a-z]/,
           returnBegin: true,
-          contains: [iri, pname],
+          contains: [iri, pname, error],
           starts: {
-            className: "value",
-            end: /\B\b/,
-            contains: [iri, pname, string],
-            // endsParent: true
-          }
+            contains: [space],
+            starts: {
+              className: "value",
+              end: /\B\b/,
+              contains: [iri, pname, string, error],
+            },
+          },
         },
-        { className: "punct", begin: / *(;|\|) */ }
-      ]
+        space,
+        { className: "punct", begin: /(;|\|)/ },
+      ],
     }
   }
 }());
