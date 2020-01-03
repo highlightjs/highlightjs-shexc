@@ -5,27 +5,33 @@ hljs.registerLanguage("toy", function () {
     const string = { className: "str", begin: /'[^']*'/, endsParent: true }
     const ws = { className: "ws", begin: /\s+/ }
     const error = { className: "error", begin: /./ }
+    function eatSpace (next) {
+      return {
+        contains: [ws],
+        starts: next
+      }
+    }
+    const o = {
+      className: "value",
+      begin: /./,
+      contains: [iri, pname, string],
+    }
+    const po = {
+      className: "predicate",
+      begin: /<|[A-Za-z]/,
+      returnBegin: true,
+      contains: [iri, pname],
+      starts: eatSpace(o),
+    }
+    const tc = {
+      className: "tripleConstraint",
+      begin: /<|[A-Za-z]/,
+      returnBegin: true,
+      contains: [po]
+    }
     return {
       contains: [
-        {
-          className: "tripleConstraint",
-          begin: /<|[A-Za-z]/,
-          returnBegin: true,
-          contains: [
-            {
-              className: "predicate",
-              begin: /<|[A-Za-z]/,
-              returnBegin: true,
-              contains: [iri, pname],
-              starts: {
-                contains: [ws],
-                starts: {
-                  className: "value",
-                  begin: /<|[A-Za-z]|'/,
-                  contains: [iri, pname, string],
-                },
-              },
-            } ] },
+        tc,
         ws,
         { className: "punct", begin: /(;|\|)/ },
       ],
