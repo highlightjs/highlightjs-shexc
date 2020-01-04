@@ -14,7 +14,6 @@ hljs.registerLanguage("toy", function () {
     const shapeDefinition = {}
     const value = {
       className: "value",
-      begin: /./,
       contains: [shapeDefinition, iri, pname, string],
     }
     const predicate_value = {
@@ -32,10 +31,25 @@ hljs.registerLanguage("toy", function () {
     }
     Object.assign(shapeDefinition, {
       className: "shapeDefinition",
-      begin: /\{/,
-      end: /\}/,
-      endsParent: true,
+      begin: /(?:EXTRA|CLOSED)(?:\s|<|\{)|\{/, end: /\}/,
+      returnBegin: true, returnEnd: true,
+      // excludeBegin: true, excludeEnd: true, -- moves close curley to outside <span class="value"/>
       contains: [
+        { className: "punct", begin: /\{/ },
+        { className: "punct", begin: /\}/, endsParent: true },
+        { className: "extra",
+          begin: /EXTRA/,
+          end: /(?:EXTRA|CLOSED)(?:\s|<|\{)|\{/,
+          returnEnd: true,
+          keywords: "EXTRA",
+          // returnBegin: true,
+          // contains: [
+          //   {className: "keyword", begin: /EXTRA/},
+          //   // iri, pname
+          // ],
+          start: { contains: [iri, pname] }
+        },
+        { className: "keyword", begin: /CLOSED/ },
         tripleConstraint,
         ws,
         { className: "punct", begin: /(;|\|)/ },
