@@ -11,30 +11,43 @@ hljs.registerLanguage("toy", function () {
         starts: next
       }
     }
-    const o = {
+    const shapeDefinition = {}
+    const value = {
       className: "value",
       begin: /./,
-      contains: [iri, pname, string],
+      contains: [shapeDefinition, iri, pname, string],
     }
-    const po = {
+    const predicate_value = {
       className: "predicate",
       begin: /<|[A-Za-z]/,
       returnBegin: true,
       contains: [iri, pname],
-      starts: eatSpace(o),
+      starts: eatSpace(value),
     }
-    const tc = {
+    const tripleConstraint = {
       className: "tripleConstraint",
       begin: /<|[A-Za-z]/,
       returnBegin: true,
-      contains: [po]
+      contains: [predicate_value]
     }
-    return {
+    Object.assign(shapeDefinition, {
+      className: "shapeDefinition",
+      begin: /\{/,
+      end: /\}/,
+      endsParent: true,
       contains: [
-        tc,
+        tripleConstraint,
         ws,
         { className: "punct", begin: /(;|\|)/ },
-      ],
+      ]
+    })
+    return {
+      contains: [
+        // either encapsulate:
+        { contains: [eatSpace(shapeDefinition)] }
+        // or disable endsParent:
+        //   eatSpace(Object.assign({}, shapeDefinition, { endsParent: false }))
+      ]
     }
   }
 }());
@@ -42,18 +55,14 @@ hljs.registerLanguage("toy", function () {
 window.addEventListener('load', evt => {
   const elt = document.querySelector('pre code.toy')
   hljs.highlightBlock(elt)
-  let count = 0
-  const cz = Array.from(document.querySelector('pre code.toy').childNodes)
-  for (let i = 0; i < cz.length; ++i) {
-    let c = cz[i]
-    if (c.classList && c.classList[0] === "hljs-tripleConstraint")
-      ++count
-    else if (c.childNodes.length === 1 && c.childNodes[0].nodeType === Node.TEXT_NODE)
-      c.childNodes[0].textContent = c.childNodes[0].textContent.replace(/\n/g, _ => {
-        const was = count
-        count = 0
-        c.classList = "info";
-        return " -- " + was + "\n"
-      })
-  }
+  document.querySelectorAll('.hljs-shapeDefinition').forEach(n => {
+    const tcs = Array.from(n.childNodes).filter(c => c.classList && c.classList[0] === "hljs-tripleConstraint")
+    const elt = document.createElement('span')
+    elt.classList = ["info"]
+    elt.innerText = "" + tcs.length
+    // annotate before:
+    // n.parentNode.insertBefore(elt, n);
+    // or after:
+    n.parentNode.insertBefore(elt, n.nextSibling);
+  })
 })

@@ -7,20 +7,33 @@
       .hljs-pname { color: orange; }
       .hljs-str { color: blue; }
       .hljs-punct { background-color: #dfd; }
-      .hljs-predicate { text-decoration: overline; }
+      .hljs-predicate { text-decoration: underline; }
       .hljs-predicate999::after { content: '->'; font-size: .5em; vertical-align: middle; }
       .hljs-value { ; }
-      .hljs-tripleConstraint { text-decoration: underline; }
+      .hljs-tripleConstraint:hover { background-color: #fff; }
+      .hljs-tripleConstraint > .hljs-value > .hljs-shapeDefinition:hover { background-color: #eee; }
       .hljs-ws { background-color: #ddd; }
-      .hljs-predicate + .hljs-ws { text-decoration: line-through; }
+      .hljs-predicate + .hljs-ws { text-decoration: line-through; color: #ddd; background-color: initial; }
       .hljs-error { background-color: red; color: #f77 }
-      .info { background-color: cyan; }
+      .info { background-color: cyan; position: relative; top: -0.7em; left: -0.3em; font-size: 60%; }
     </style>
   </head>
   <body>
-    <pre><code class="toy"> &lt;i1&gt; 'l1' ; p:l &lt;i3&gt; ; &lt;i4&gt; a:b ; 
-&lt;i1&gt;'l1';p:l&lt;i3&gt;;&lt;i4&gt;a:b;
- x&lt;i1&gt;x 'l1' p:l &lt;i3&gt;x; &lt;i4&gt; a:b %x
+    <pre><code class="toy">
+{
+  &lt;i1&gt; 'l1' ;
+  p:l &lt;i3&gt; ;
+  &lt;i4&gt; a:b ;
+  p:l {
+    p:l {
+      p:l p:l
+    } ;
+    &lt;i5&gt; p:l
+  } ;
+  p:l a:b
+} 
+{&lt;i1&gt;'l1';p:l&lt;i3&gt;;&lt;i4&gt;a:b}
+{ x&lt;i1&gt;x 'l1' p:l &lt;i3&gt;x; &lt;i4&gt; a:b %x }
     </code></pre>
     <script src="../../src/highlight.js"></script>
     <script src="toy.js">
