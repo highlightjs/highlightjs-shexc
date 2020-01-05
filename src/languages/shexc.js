@@ -52,7 +52,7 @@ module.exports = function (hljs, opts = {}) {
 
   /** shape expressions from <http://shex.io/shex-semantics/index.html#prod-shapeExpression> 
    */
-  productions.shape = {
+  productions.shapeDefinition = {
     begin: /{/, end: /}/,
     relevance: 0
     // Add .contains (below) after constructing its contents.
@@ -113,7 +113,7 @@ module.exports = function (hljs, opts = {}) {
       contains: [common.literal, productions.IRIREF, productions.prefixedName]
     },
 
-    productions.shape,
+    productions.shapeDefinition,
   ]
   const shapeExpression_keywords = 'and or not closed abstract extends restricts iri bnode literal nonliteran'
     + ' length minlength maxlength'
@@ -129,13 +129,34 @@ module.exports = function (hljs, opts = {}) {
 
   /** shape expressions from <http://shex.io/shex-semantics/index.html#prod-unaryTripleExpr> 
    */
-  productions.tripleExpression = {
+  const ws = { className: "ws", begin: /\s+/ }
+  function eatSpace (next) {
+    return {
+      contains: [ws],
+      starts: next
+    }
+  }
+  const value = {
+    className: "value",
+    // contains: [productions.shapeDefinition, productions.IRIREF, productions.prefixedName, common.literal],
+    contains: [productions.IRIREF, productions.prefixedName, common.literal].concat(shapeExprContentModel),
+  }
+  const predicate_value = {
+    className: "predicate",
+    begin: common.iris_RE,
+    returnBegin: true,
+    contains: [productions.IRIREF, productions.prefixedName],
+    starts: eatSpace(value),
+  }
+
+  productions.tripleConstraint = {
+    className: "shex_tripleConstraint",
     begin: common.iris_RE,
     end: common.EndOfDocument,
     returnBegin: true,
     endsWithParent: true,
     keywords: shapeExpression_keywords,
-    contains: [productions.IRIREF, productions.prefixedName].concat(shapeExprContentModel),
+    contains: [predicate_value],
     relevance: 0
   }
   productions.tripleExprLabel = {
@@ -167,8 +188,8 @@ module.exports = function (hljs, opts = {}) {
   }
 
   // Add last component in this cycle:
-  //   shape ➜ tripleExpression ➜ shapeExpression ➜ shape
-  productions.shape.contains = [productions.tripleExprLabel, productions.inclusion, productions.tripleExpression]
+  //   shape ➜ tripleConstraint ➜ shapeExpression ➜ shape
+  productions.shapeDefinition.contains = [productions.tripleExprLabel, productions.inclusion, productions.tripleConstraint]
 
   const startingProduction = opts.startingProduction || 'shexDoc'
   if (!(startingProduction in productions))
