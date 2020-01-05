@@ -20,6 +20,7 @@
 #demos > div > pre  { flex: 1 100%; }
 #demos > div > h2 { flex: 1; }
 #demos > div > ul    { flex: 2; display999: none; }
+.hljs-predicate { text-decoration: underline; }
     </style>
   </head>
   <body>
@@ -45,7 +46,11 @@ BASE &lt;http://my.example/schema&gt;
   :mode ["a\r\n" 1 :ab &apos;b&apos; 1.1 &lt;cd#ef&gt;~ - &lt;cd#efg&gt;~ true
          """c""" .1 &apos;&apos;&apos;d&apos;&apos;&apos; 1E1 "e&apos;" 1.1e1 &apos;f"&apos; .1e1 """
 g
-h"""]
+h"""] ;
+  ex:nested CLOSED EXTRA foaf:name &lt;http://schema.org/name&gt; {
+       foaf:name LITERAL
+    |  &lt;http://schema.org/name&gt; LITERAL
+  }
 }
 
 ABSTRACT &lt;PersonShape&gt; {
@@ -77,7 +82,7 @@ ABSTRACT &lt;RepShape&gt; {
     </code></pre>
     </div>
     <div>
-    <h2>ShEx<br/>tripleExpressions</h2>
+    <h2>ShEx<br/>tripleConstraints</h2>
     <ul></ul>
     <pre><code class="language-texpr">
 :name xsd:string ;
@@ -169,11 +174,11 @@ HAVING (COUNT(?O) &gt; 2 )
     <script src="dist/ttl.min.js"></script>
     <script src="dist/sparql.min.js"></script>
     <script>
-      // If you want to start from a nested production, e.g. "tripleExpression",
+      // If you want to start from a nested production, e.g. "tripleConstraint",
       // register it like so:
       hljs.registerLanguage('texpr', h =>
                             h.requireLanguage("shexc")
-                            .rawDefinition({startingProduction: "tripleExpression"}));
+                            .rawDefinition({startingProduction: "tripleConstraint"}));
       const guessLanguage = false;
       if (!guessLanguage)  {
         // Start syntax highlighting.
