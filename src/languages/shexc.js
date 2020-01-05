@@ -138,7 +138,7 @@ module.exports = function (hljs, opts = {}) {
   }
   const shapeDefinition = {}
   const value = {
-    className: "value",
+    className: "shex_value",
     contains: [    {
       className: 'name',
       begin: '@' + common.iris_RE,
@@ -180,7 +180,7 @@ shapeDefinition, productions.IRIREF, productions.prefixedName, common.literal],
     relevance: 0
   }
     Object.assign(shapeDefinition, {
-      className: "shapeDefinition",
+      className: "shex_shapeDefinition",
       begin: /(?:EXTRA|CLOSED)(?:\s|<|\{)|\{/, end: /\}/,
       returnBegin: true, returnEnd: true,
       // excludeBegin: true, excludeEnd: true, -- moves close curley to outside <span class="value"/>
