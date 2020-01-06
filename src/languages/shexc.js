@@ -139,27 +139,28 @@ module.exports = function (hljs, opts = {}) {
   const shapeDefinition = {}
   const value = {
     className: "shex_value",
-    contains: [    {
-      className: 'name',
-      begin: '@' + common.iris_RE,
-      contains: [ common.PERCENT, common.UCHAR ],
-      relevance: 10
-    },
-    {
-      className: 'regexp',
-      begin: /\/([^\\/]|\\.)*\//,
-      contains: [
-        hljs.REGEXP_MODE,
-      ],
-    },
-    {
-      className: 'valueSet',
-      begin: '\\[',
-      end: '\\]',
-      contains: [common.literal, productions.IRIREF, productions.prefixedName]
-    }, {beginKeywords: 'LITERAL IRI'},
-shapeDefinition, productions.IRIREF, productions.prefixedName, common.literal],
-    // contains: [productions.IRIREF, productions.prefixedName, common.literal].concat(shapeExprContentModel),
+    contains: [
+      {
+        className: 'name',
+        begin: '@' + common.iris_RE,
+        contains: [ common.PERCENT, common.UCHAR ],
+        relevance: 10
+      },
+      {
+        className: 'regexp',
+        begin: /\/([^\\/]|\\.)*\//,
+        contains: [
+          hljs.REGEXP_MODE,
+        ],
+      },
+      {
+        className: 'valueSet',
+        begin: '\\[',
+        end: '\\]',
+        contains: [common.literal, productions.IRIREF, productions.prefixedName]
+      }, {beginKeywords: 'LITERAL IRI'},
+      shapeDefinition, productions.IRIREF, productions.prefixedName, common.literal
+    ],
   }
   const predicate_value = {
     className: "predicate",
