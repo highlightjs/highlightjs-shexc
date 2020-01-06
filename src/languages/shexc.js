@@ -139,7 +139,25 @@ module.exports = function (hljs, opts = {}) {
   const shapeDefinition = {}
   const value = {
     className: "shex_value",
+
+    // I'm trying various things to stay in value. Below, I tried scanning to
+    // the end of a triple constraint but it was too greedy (consumed to the
+    // end). (It was doomed anyways 'cause there can be nested {...}s.)
+
+    // end: /\}\)\|/,
+    // returnEnd: true,
+    // endsParent: true,
     contains: [
+
+      // I also tried this but it doesn't get tested 'cause the state machine
+      // has already left this production when it got the first match in one of
+      // the rules further down.
+
+      // {
+      //   begin: /\}\)\|/,
+      //   returnBegin: true,
+      //   endsParent: true
+      // },
       {
         className: 'name',
         begin: '@' + common.iris_RE,
@@ -161,6 +179,10 @@ module.exports = function (hljs, opts = {}) {
       }, {beginKeywords: 'LITERAL IRI'},
       shapeDefinition, productions.IRIREF, productions.prefixedName, common.literal
     ],
+
+    // Finally, I tried to make it stay in this production with `starts` in
+    // conjunction with either of the `endsParent` rules above.
+    // starts: self
   }
   const predicate_value = {
     className: "predicate",
