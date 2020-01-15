@@ -115,7 +115,7 @@ module.exports = function (hljs, opts = {}) {
 
     productions.shapeDefinition,
   ]
-  const shapeExpression_keywords = 'and or not closed abstract extends restricts iri bnode literal nonliteran'
+  const shapeExpression_keywords = 'and or not closed abstract extends restricts iri bnode literal nonliteral'
     + ' length minlength maxlength'
     + ' mininclusive minexclusive maxinclusive maxexclusive'
   productions.shapeExpression = {
