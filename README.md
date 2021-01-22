@@ -22,7 +22,7 @@ You must add the `highlight.js` file from [highlight.js](https://github.com/high
 If you are not using a build system and just want to embed this in your webpage:
 
 ```javascript
-<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script type="text/javascript" src="js/highlight.min.js"></script>
 <script type="text/javascript" src="js/shexc.js"></script>
 <script type="text/javascript">
     hljs.registerLanguage('shexc', window.hljsDefineShExC);
