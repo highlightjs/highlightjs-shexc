@@ -26,7 +26,7 @@ If you are not using a build system and just want to embed this in your webpage:
 <script type="text/javascript" src="js/shexc.js"></script>
 <script type="text/javascript">
     hljs.registerLanguage('shexc', window.hljsDefineShExC);
-    hljs.initHighlightingOnLoad();
+    hljs.highlightAll();
 </script>
 ```
 
@@ -37,7 +37,7 @@ var hljs = require('highlightjs');
 var hljsDefineShExC = require('highlightjs-shexc');
 
 hljsDefineShExC(hljs);
-hljs.initHighlightingOnLoad();
+hljs.highlightAll();
 ```
 
 ## Licence
